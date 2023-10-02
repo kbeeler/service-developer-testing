@@ -7,7 +7,7 @@ public class MakingDeposits
     public void MakingADepositIncreasesTheBalance()
     {
         // Given
-        var account = new Account(Substitute.For<ICalculateBonuses>());
+        var account = new Account(Substitute.For<ICalculateBonuses>(), Substitute.For<INotifyOfFraudDetection>());
         var openingBalance = account.GetBalance();
         var amountToDeposit = 100M;
 

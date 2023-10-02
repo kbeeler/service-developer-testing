@@ -8,7 +8,7 @@ public class BankAccountUsesBonusCalculator
     {
         // Given
         var stubbedBonusCalculator = Substitute.For<ICalculateBonuses>(); // Stub
-        var account = new Account(stubbedBonusCalculator);
+        var account = new Account(stubbedBonusCalculator, Substitute.For<INotifyOfFraudDetection>());
         var openingBalance = account.GetBalance();
         var amountToDeposit = 100M;
         stubbedBonusCalculator.GetBonusForDepositOn(openingBalance, amountToDeposit).Returns(42.23M);

@@ -3,10 +3,12 @@
 public class Account
 {
     private readonly ICalculateBonuses _bonusCalculator;
+    private readonly INotifyOfFraudDetection _fraudDetection;
 
-    public Account(ICalculateBonuses bonusCalculator)
+    public Account(ICalculateBonuses bonusCalculator, INotifyOfFraudDetection fraudDetection)
     {
         _bonusCalculator = bonusCalculator;
+        _fraudDetection = fraudDetection;
     }
 
     private decimal _balance = 5000M;
@@ -31,8 +33,12 @@ public class Account
         }
         else
         {
+            // The fraud detection people are notified.
+            _fraudDetection.NotifyOfOverdraft(amountToWithdraw);
             throw new OverdraftException();
         }
+
+
     }
 }
 

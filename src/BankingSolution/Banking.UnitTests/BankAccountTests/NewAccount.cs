@@ -8,7 +8,7 @@ public class NewAccount
     public void NewAccountHasCorrectOpeningBalance()
     {
         // Given I have a new account
-        var account = new Account(Substitute.For<ICalculateBonuses>());
+        var account = new Account(Substitute.For<ICalculateBonuses>(), Substitute.For<INotifyOfFraudDetection>());
 
         // When I ask that account for the balance
         decimal balance = account.GetBalance();
