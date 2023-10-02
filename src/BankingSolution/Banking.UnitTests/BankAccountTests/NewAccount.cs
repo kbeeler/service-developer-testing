@@ -8,7 +8,7 @@ public class NewAccount
     public void NewAccountHasCorrectOpeningBalance()
     {
         // Given I have a new account
-        var account = new Account();
+        var account = new Account(Substitute.For<ICalculateBonuses>());
 
         // When I ask that account for the balance
         decimal balance = account.GetBalance();
@@ -17,3 +17,4 @@ public class NewAccount
         Assert.Equal(5000M, balance);
     }
 }
+

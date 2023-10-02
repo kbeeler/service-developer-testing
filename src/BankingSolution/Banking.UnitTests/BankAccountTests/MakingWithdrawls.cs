@@ -6,7 +6,7 @@ public class MakingWithdrawls
     [Fact]
     public void MakingAWithdrawalDecreasesBalance()
     {
-        var account = new Account();
+        var account = new Account(Substitute.For<ICalculateBonuses>());
         var openingBalance = account.GetBalance();
         var amountToWithdraw = 100M;
 
@@ -20,7 +20,7 @@ public class MakingWithdrawls
     [Fact]
     public void CanTakeFullBalance()
     {
-        var account = new Account();
+        var account = new Account(Substitute.For<ICalculateBonuses>());
 
         account.Withdraw(account.GetBalance());
 
@@ -30,7 +30,7 @@ public class MakingWithdrawls
     [Fact]
     public void OverdraftNotAllowed()
     {
-        var account = new Account();
+        var account = new Account(Substitute.For<ICalculateBonuses>());
         var openingBalance = account.GetBalance();
         var amountToWithdraw = account.GetBalance() + .01M;
 
