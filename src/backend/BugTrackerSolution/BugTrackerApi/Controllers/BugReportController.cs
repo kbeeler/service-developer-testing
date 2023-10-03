@@ -1,30 +1,32 @@
 ﻿using BugTrackerApi.Models;
 using BugTrackerApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BugTrackerApi.Controllers;
 
 public class BugReportController : ControllerBase
 {
-    private readonly ISystemTime _systemTime;
 
-    public BugReportController(ISystemTime systemTime)
+    private readonly BugReportManager _bugManager;
+
+    public BugReportController(BugReportManager bugManager)
     {
-        _systemTime = systemTime;
+        _bugManager = bugManager;
     }
 
-    [HttpPost("/catalog/excel/bugs")]
-    public async Task<ActionResult> AddABugReport([FromBody] BugReportCreateRequest request)
+    [Authorize]
+    [HttpPost("/catalog/{software}/bugs")]
+    public async Task<ActionResult<BugReportCreateResponse>> AddABugReport([FromBody] BugReportCreateRequest request, [FromRoute] string software)
     {
-        var response = new BugReportCreateResponse
-        {
-            Id = "excel-goes-boom",
-            Issue = request,
-            Software = "Excel",
-            Status = IssueStatus.InTriage,
-            User = "Bob",
-            Created = _systemTime.GetCurrent()
-        };
-        return StatusCode(201, response);
+        var slugGenerator = new SlugUtils.SlugGenerator();
+        var user = User.GetName();
+        var response = await _bugManager.CreateBugReportAsync(user, software, request);
+
+        return response.Match<ActionResult>(
+            report => StatusCode(201, report),
+            _ => NotFound("That software is not supported")
+            );
     }
+
 }

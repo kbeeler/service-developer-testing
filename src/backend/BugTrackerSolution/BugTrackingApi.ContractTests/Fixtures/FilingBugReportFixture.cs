@@ -1,4 +1,5 @@
-﻿using BugTrackerApi.Services;
+﻿using Alba.Security;
+using BugTrackerApi.Services;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 
@@ -14,6 +15,10 @@ public class FilingBugReportFixture : BaseAlbaFixture
         // The "recommendation" is you remove the existing thing first, I have NEVER had a problem when I don't.
         services.AddSingleton<ISystemTime>(fakeClock);
 
+    }
+    protected override AuthenticationStub GetStub()
+    {
+        return base.GetStub().WithName("Steve");
     }
 
 }
