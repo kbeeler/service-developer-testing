@@ -1,10 +1,17 @@
 ﻿using BugTrackerApi.Models;
+using BugTrackerApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BugTrackerApi.Controllers;
 
 public class BugReportController : ControllerBase
 {
+    private readonly ISystemTime _systemTime;
+
+    public BugReportController(ISystemTime systemTime)
+    {
+        _systemTime = systemTime;
+    }
 
     [HttpPost("/catalog/excel/bugs")]
     public async Task<ActionResult> AddABugReport([FromBody] BugReportCreateRequest request)
@@ -16,7 +23,7 @@ public class BugReportController : ControllerBase
             Software = "Excel",
             Status = IssueStatus.InTriage,
             User = "Bob",
-            Created = DateTime.UtcNow
+            Created = _systemTime.GetCurrent()
         };
         return StatusCode(201, response);
     }

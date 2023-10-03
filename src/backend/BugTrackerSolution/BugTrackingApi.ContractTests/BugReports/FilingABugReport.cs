@@ -1,14 +1,23 @@
 ﻿using Alba;
 using BugTrackerApi.Models;
+using BugTrackingApi.ContractTests.Fixtures;
 
 namespace BugTrackingApi.ContractTests.BugReports;
+
+[Collection("FilingABugReport")]
 public class FilingABugReport
 {
+
+    private readonly IAlbaHost _host;
+    public FilingABugReport(FilingBugReportFixture fixture)
+    {
+        _host = fixture.AlbaHost;
+    }
     [Fact]
     public async Task FilingANewBugReport()
     {
         // Given
-        var host = await AlbaHost.For<Program>();
+
 
         var request = new BugReportCreateRequest
         {
@@ -22,14 +31,15 @@ public class FilingABugReport
             Issue = request,
             Status = IssueStatus.InTriage,
             Software = "Excel",
-            Created = DateTime.UtcNow
+            Created = FilingBugReportFixture.AssumedTime
         };
 
         // When (and some then)
-        var response = await host.Scenario(api =>
+        var response = await _host.Scenario(api =>
         {
             api.Post.Json(request).ToUrl("/catalog/excel/bugs");
             api.StatusCodeShouldBe(201);
+            // should be checking for the location here.
         });
 
         // Then
