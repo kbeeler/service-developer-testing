@@ -1,12 +1,16 @@
 using BugTrackerApi.Services;
 using Marten;
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(config =>
@@ -50,6 +54,12 @@ builder.Services.AddMarten(cfg =>
     cfg.AutoCreateSchemaObjects = Weasel.Core.AutoCreate.All;
 }).UseLightweightSessions();
 
+var desktopSupportUrl = builder.Configuration.GetValue<string>("desktop-support") ?? throw new Exception("Need a URL for Desktop Support");
+
+builder.Services.AddHttpClient<IDesktopSupportHttpClient, DesktopSupportHttpClient>(client =>
+{
+    client.BaseAddress = new Uri(desktopSupportUrl);
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

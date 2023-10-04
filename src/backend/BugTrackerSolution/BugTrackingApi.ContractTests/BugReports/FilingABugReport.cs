@@ -1,6 +1,7 @@
 ﻿using Alba;
 using BugTrackerApi.Models;
 using BugTrackingApi.ContractTests.Fixtures;
+using Microsoft.Net.Http.Headers;
 
 namespace BugTrackingApi.ContractTests.BugReports;
 
@@ -23,7 +24,7 @@ public class FilingABugReport
         {
             api.Post.Json(request).ToUrl($"/catalog/{software}/bugs");
             api.StatusCodeShouldBe(201);
-            // should be checking for the location here.
+            api.Header(HeaderNames.Location).ShouldHaveOneNonNullValue();
         });
 
         // Then
@@ -31,6 +32,10 @@ public class FilingABugReport
         Assert.NotNull(actualResponse);
 
         Assert.Equal(expectedReponse, actualResponse);
+
+        var header = response.Context.Response.Headers.Location.First();
+        var expectedHeader = $"http://localhost/catalog/{software}/bugs/{actualResponse.Id}";
+        Assert.Equal(expectedHeader, header);
     }
 
     public static IEnumerable<object[]> GetSamplesForTheory()

@@ -5,6 +5,10 @@ services:
       POSTGRES_PASSWORD: password
     ports:
       - 5432:5432
+  desktop-support-responder:
+    image: jeffrygonzalez/desktop-support:latest
+    ports: 
+      - 1341:80
   adminer:
     image: adminer
     restart: always

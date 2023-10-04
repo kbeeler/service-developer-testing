@@ -1,41 +1,36 @@
 ﻿using Alba.Security;
 using BugTrackerApi.Services;
+using DotNet.Testcontainers.Builders;
+using DotNet.Testcontainers.Containers;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
-using Testcontainers.PostgreSql;
-using WireMock.Server;
 
 namespace BugTrackingApi.ContractTests.Fixtures;
-public class FilingBugReportFixture : BaseAlbaFixture
+public class SeededDatabaseFixture : BaseAlbaFixture
 {
     public static DateTimeOffset AssumedTime = new(new DateTime(1969, 4, 20, 23, 59, 59), TimeSpan.FromHours(-4));
-    private readonly string PG_IMAGE = "postgres:15.2-bullseye";
-    private readonly PostgreSqlContainer _pgContainer;
-    public WireMockServer MockServer = null!;
-    public FilingBugReportFixture()
+    private readonly string PG_IMAGE = "jeffrygonzalez/bug-tracker-oct-2023:3-bugs-in-excel";
+    private readonly IContainer _container;
+    public SeededDatabaseFixture()
     {
-        _pgContainer = new PostgreSqlBuilder()
-            .WithUsername("postgres")
-            .WithPassword("password")
-            .WithImage(PG_IMAGE).Build();
+        _container = new ContainerBuilder()
+
+          .WithEnvironment("PGDATA", "/pgdata")
+          .WithPortBinding("5432", "5432")
+          .WithImage(PG_IMAGE).Build();
 
     }
 
     protected override async Task Initializeables()
     {
-        MockServer = WireMockServer.Start(1349);
-        await _pgContainer.StartAsync();
+        await _container.StartAsync();
         // Need to tell it to use THIS container instead of the one in our appsetting.development.json
-        Environment.SetEnvironmentVariable("ConnectionStrings__bugs", _pgContainer.GetConnectionString());
-
+        //Environment.SetEnvironmentVariable("ConnectionStrings__bugs", "PORT = 5432; HOST = localhost; DATABASE = postgres; PASSWORD = password; USER ID = postgres);
     }
-
     protected override async Task Disposables()
     {
-        MockServer.Reset();
-        MockServer.Stop();
-        await _pgContainer.DisposeAsync().AsTask();
-        Environment.SetEnvironmentVariable("ConnectionStrings__bugs", null);
+        await _container.DisposeAsync().AsTask();
+        //Environment.SetEnvironmentVariable("ConnectionStrings__bugs", null);
         // Use whatever database library to delete whatever was created by this "collection" of tests.
 
     }
