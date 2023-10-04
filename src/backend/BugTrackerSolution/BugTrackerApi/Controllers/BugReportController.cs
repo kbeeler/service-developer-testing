@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BugTrackerApi.Controllers;
 
+[ApiController]
 public class BugReportController : ControllerBase
 {
 
@@ -19,7 +20,7 @@ public class BugReportController : ControllerBase
     [HttpPost("/catalog/{software}/bugs")]
     public async Task<ActionResult<BugReportCreateResponse>> AddABugReport([FromBody] BugReportCreateRequest request, [FromRoute] string software)
     {
-        var slugGenerator = new SlugUtils.SlugGenerator();
+
         var user = User.GetName();
         var response = await _bugManager.CreateBugReportAsync(user, software, request);
 
@@ -28,5 +29,7 @@ public class BugReportController : ControllerBase
             _ => NotFound("That software is not supported")
             );
     }
+
+
 
 }

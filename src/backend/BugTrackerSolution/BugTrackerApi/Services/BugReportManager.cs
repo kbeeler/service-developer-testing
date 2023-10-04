@@ -49,6 +49,7 @@ public class BugReportManager
                 };
                 _documentSession.Insert(entityToSave);
                 await _documentSession.SaveChangesAsync();
+                // send a request to a remote API to tell them to assign this to a support person.
 
                 return report;
             }

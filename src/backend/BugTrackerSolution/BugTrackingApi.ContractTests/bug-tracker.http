@@ -1,0 +1,9 @@
+
+POST http://localhost:1337/catalog/excel/bugs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IklUVVN0dWRlbnQiLCJzdWIiOiJJVFVTdHVkZW50IiwianRpIjoiODk1YjkyZjUiLCJhdWQiOlsiaHR0cDovL2xvY2FsaG9zdDoyMDM2OSIsImh0dHBzOi8vbG9jYWxob3N0OjAiLCJodHRwOi8vbG9jYWxob3N0OjEzMzciXSwibmJmIjoxNjk2NDM1OTc0LCJleHAiOjE3MDQzODQ3NzQsImlhdCI6MTY5NjQzNTk3NiwiaXNzIjoiZG90bmV0LXVzZXItand0cyJ9.7nnYorVOuNVmET_075hMo_oVQZB7ImR4HKnmQ6i6cdQ
+
+{
+  "narrative": "Here is the thing",
+  "description": "This is a nig issue about the thing"
+}

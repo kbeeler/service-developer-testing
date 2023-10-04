@@ -5,3 +5,12 @@ services:
       POSTGRES_PASSWORD: password
     ports:
       - 5432:5432
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 9090:8080
+    environment:
+      ADMINER_DESIGN: dracula
+
+      

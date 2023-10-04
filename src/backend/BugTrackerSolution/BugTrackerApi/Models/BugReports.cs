@@ -6,10 +6,12 @@ namespace BugTrackerApi.Models;
 
 public record BugReportCreateRequest
 {
+    [Required, MinLength(5), MaxLength(200)]
     public string Description { get; set; } = string.Empty;
-    public string Narrative { get; set; } = string.Empty;
     [Required]
-    public string MachineNdNumber { get; set; } = string.Empty;
+    [MaxLength(2000)]
+    public string Narrative { get; set; } = string.Empty;
+
 }
 
 
